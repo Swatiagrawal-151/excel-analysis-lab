@@ -38,7 +38,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileUploaded }) => {
         }
 
         const headers = jsonData[0] as string[];
-        const rows = jsonData.slice(1).filter(row => row.length > 0);
+        const rows = jsonData.slice(1).filter((row: any) => Array.isArray(row) && row.length > 0);
 
         const processedData: ExcelData = {
           fileName: file.name,

@@ -3,141 +3,163 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { ExcelData } from '@/pages/Index';
-import { BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Download, BarChart3, LineChart as LineIcon, PieChart as PieIcon, Scatter as ScatterIcon, Area as AreaIcon } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, ScatterChart, Scatter as ScatterPlot, AreaChart, Area } from 'recharts';
+import { BarChart3, LineChart as LineChartIcon, PieChart as PieChartIcon, TrendingUp, Download } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 interface ChartGeneratorProps {
   data: ExcelData;
 }
 
-const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
 const chartTypes = [
   { value: 'bar', label: 'Bar Chart', icon: BarChart3 },
-  { value: 'line', label: 'Line Chart', icon: LineIcon },
-  { value: 'area', label: 'Area Chart', icon: AreaIcon },
-  { value: 'pie', label: 'Pie Chart', icon: PieIcon },
-  { value: 'scatter', label: 'Scatter Plot', icon: ScatterIcon },
+  { value: 'line', label: 'Line Chart', icon: LineChartIcon },
+  { value: 'pie', label: 'Pie Chart', icon: PieChartIcon },
+  { value: 'scatter', label: 'Scatter Plot', icon: TrendingUp },
+  { value: 'area', label: 'Area Chart', icon: TrendingUp },
 ];
 
 export const ChartGenerator: React.FC<ChartGeneratorProps> = ({ data }) => {
-  const [chartType, setChartType] = useState('bar');
-  const [xAxis, setXAxis] = useState('');
-  const [yAxis, setYAxis] = useState('');
+  const [chartType, setChartType] = useState<string>('bar');
+  const [xAxis, setXAxis] = useState<string>('');
+  const [yAxis, setYAxis] = useState<string>('');
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const numericColumns = data.headers.filter(header => {
-    return data.data.some(row => !isNaN(Number(row[header])) && row[header] !== '');
+    return data.data.some(row => {
+      const value = row[header];
+      return !isNaN(Number(value)) && value !== '' && value !== null;
+    });
   });
 
-  const allColumns = data.headers;
-
-  const generateChartData = () => {
+  const prepareChartData = () => {
     if (!xAxis || !yAxis) return [];
-    
+
     return data.data
       .filter(row => row[xAxis] && row[yAxis])
       .map(row => ({
         [xAxis]: row[xAxis],
-        [yAxis]: Number(row[yAxis]) || 0,
-        name: row[xAxis],
-        value: Number(row[yAxis]) || 0
-      }))
-      .slice(0, 20); // Limit to 20 items for better visualization
+        [yAxis]: isNaN(Number(row[yAxis])) ? 0 : Number(row[yAxis]),
+      }));
   };
 
-  const chartData = generateChartData();
+  const chartData = prepareChartData();
 
   const downloadChart = async () => {
-    const chartElement = document.getElementById('chart-container');
-    if (chartElement) {
-      const canvas = await html2canvas(chartElement);
-      const link = document.createElement('a');
-      link.download = `${data.fileName}_${chartType}_chart.png`;
-      link.href = canvas.toDataURL();
-      link.click();
+    setIsDownloading(true);
+    try {
+      const chartElement = document.getElementById('chart-container');
+      if (chartElement) {
+        const canvas = await html2canvas(chartElement);
+        const link = document.createElement('a');
+        link.download = `${data.fileName}_${chartType}_chart.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      }
+    } catch (error) {
+      console.error('Error downloading chart:', error);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
   const renderChart = () => {
-    if (chartData.length === 0) {
+    if (!xAxis || !yAxis || chartData.length === 0) {
       return (
         <div className="flex items-center justify-center h-64 text-gray-500">
-          Please select X and Y axes to generate a chart
+          <p>Select X and Y axes to generate chart</p>
         </div>
       );
     }
 
+    const commonProps = {
+      width: 800,
+      height: 400,
+      data: chartData,
+      margin: { top: 5, right: 30, left: 20, bottom: 5 },
+    };
+
     switch (chartType) {
       case 'bar':
         return (
-          <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey={xAxis} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey={yAxis} fill="#3B82F6" />
-          </BarChart>
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart {...commonProps}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey={xAxis} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey={yAxis} fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
         );
-
+      
       case 'line':
         return (
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey={xAxis} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey={yAxis} stroke="#3B82F6" strokeWidth={2} />
-          </LineChart>
-        );
-
-      case 'area':
-        return (
-          <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey={xAxis} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Area type="monotone" dataKey={yAxis} stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.3} />
-          </AreaChart>
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart {...commonProps}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey={xAxis} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey={yAxis} stroke="#8884d8" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
         );
 
       case 'pie':
         return (
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              fill="#8884d8"
-              dataKey="value"
-              label
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
+          <ResponsiveContainer width="100%" height={400}>
+            <PieChart>
+              <Pie
+                data={chartData.slice(0, 10)}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey={yAxis}
+                nameKey={xAxis}
+              >
+                {chartData.slice(0, 10).map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
         );
 
       case 'scatter':
         return (
-          <ScatterChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey={xAxis} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Scatter dataKey={yAxis} fill="#3B82F6" />
-          </ScatterChart>
+          <ResponsiveContainer width="100%" height={400}>
+            <ScatterChart {...commonProps}>
+              <CartesianGrid />
+              <XAxis type="number" dataKey={xAxis} name={xAxis} />
+              <YAxis type="number" dataKey={yAxis} name={yAxis} />
+              <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+              <ScatterPlot data={chartData} fill="#8884d8" />
+            </ScatterChart>
+          </ResponsiveContainer>
+        );
+
+      case 'area':
+        return (
+          <ResponsiveContainer width="100%" height={400}>
+            <AreaChart {...commonProps}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey={xAxis} />
+              <YAxis />
+              <Tooltip />
+              <Area type="monotone" dataKey={yAxis} stroke="#8884d8" fill="#8884d8" />
+            </AreaChart>
+          </ResponsiveContainer>
         );
 
       default:
@@ -151,80 +173,97 @@ export const ChartGenerator: React.FC<ChartGeneratorProps> = ({ data }) => {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <BarChart3 className="h-5 w-5 text-blue-600" />
-            <span>Chart Configuration</span>
+            <span>Chart Generator</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="chart-type">Chart Type</Label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Chart Type</label>
               <Select value={chartType} onValueChange={setChartType}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select chart type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {chartTypes.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      <div className="flex items-center space-x-2">
-                        <type.icon className="h-4 w-4" />
-                        <span>{type.label}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
+                  {chartTypes.map((type) => {
+                    const Icon = type.icon;
+                    return (
+                      <SelectItem key={type.value} value={type.value}>
+                        <div className="flex items-center space-x-2">
+                          <Icon className="h-4 w-4" />
+                          <span>{type.label}</span>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="x-axis">X-Axis</Label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">X-Axis</label>
               <Select value={xAxis} onValueChange={setXAxis}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select X-axis column" />
                 </SelectTrigger>
                 <SelectContent>
-                  {allColumns.map((column) => (
-                    <SelectItem key={column} value={column}>
-                      {column}
+                  {data.headers.map((header) => (
+                    <SelectItem key={header} value={header}>
+                      {header}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="y-axis">Y-Axis</Label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Y-Axis</label>
               <Select value={yAxis} onValueChange={setYAxis}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select Y-axis column" />
                 </SelectTrigger>
                 <SelectContent>
-                  {numericColumns.map((column) => (
-                    <SelectItem key={column} value={column}>
-                      {column}
+                  {numericColumns.map((header) => (
+                    <SelectItem key={header} value={header}>
+                      {header}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
           </div>
+
+          {numericColumns.length === 0 && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <p className="text-yellow-800 text-sm">
+                No numeric columns detected. Make sure your Excel file contains numeric data for Y-axis values.
+              </p>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between">
+            <div className="flex space-x-2">
+              {xAxis && <Badge variant="outline">X: {xAxis}</Badge>}
+              {yAxis && <Badge variant="outline">Y: {yAxis}</Badge>}
+              {chartData.length > 0 && (
+                <Badge variant="secondary">{chartData.length} data points</Badge>
+              )}
+            </div>
+            
+            {chartData.length > 0 && (
+              <Button onClick={downloadChart} disabled={isDownloading}>
+                <Download className="h-4 w-4 mr-2" />
+                {isDownloading ? 'Downloading...' : 'Download Chart'}
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Generated Chart</CardTitle>
-            <Button onClick={downloadChart} disabled={chartData.length === 0} className="flex items-center space-x-2">
-              <Download className="h-4 w-4" />
-              <span>Download Chart</span>
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div id="chart-container" className="w-full h-96 bg-white p-4 rounded-lg">
-            <ResponsiveContainer width="100%" height="100%">
-              {renderChart()}
-            </ResponsiveContainer>
+        <CardContent className="p-6">
+          <div id="chart-container" className="w-full">
+            {renderChart()}
           </div>
         </CardContent>
       </Card>
