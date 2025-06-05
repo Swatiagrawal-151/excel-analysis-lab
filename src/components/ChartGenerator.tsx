@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,10 +7,7 @@ import { ExcelData } from '@/pages/Index';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, ScatterChart, Scatter as ScatterPlot, AreaChart, Area } from 'recharts';
 import { BarChart3, TrendingUp, Download } from 'lucide-react';
 import html2canvas from 'html2canvas';
-import dynamic from 'next/dynamic';
-
-// Dynamically import Plot to avoid SSR issues
-const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
+import Plot from 'react-plotly.js';
 
 interface ChartGeneratorProps {
   data: ExcelData;
