@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,6 +22,7 @@ const chartTypes = [
   { value: 'scatter', label: 'Scatter Plot', icon: TrendingUp, is3D: false },
   { value: 'area', label: 'Area Chart', icon: TrendingUp, is3D: false },
   { value: 'bar3d', label: '3D Bar Chart', icon: BarChart3, is3D: true },
+  { value: 'line3d', label: '3D Line Chart', icon: TrendingUp, is3D: true },
   { value: 'scatter3d', label: '3D Scatter Plot', icon: TrendingUp, is3D: true },
   { value: 'surface3d', label: '3D Surface', icon: TrendingUp, is3D: true },
 ];
@@ -120,6 +120,40 @@ export const ChartGenerator: React.FC<ChartGeneratorProps> = ({ data }) => {
                 zaxis: { title: zAxis || 'Z' }
               },
               title: '3D Bar Chart'
+            }}
+          />
+        );
+
+      case 'line3d':
+        return (
+          <Plot
+            data={[
+              {
+                type: 'scatter3d',
+                mode: 'lines+markers',
+                x: plotData.map(d => d.x),
+                y: plotData.map(d => d.y),
+                z: plotData.map(d => d.z),
+                line: {
+                  color: '#8884d8',
+                  width: 4
+                },
+                marker: {
+                  size: 4,
+                  color: '#8884d8'
+                },
+                name: '3D Line Chart'
+              }
+            ]}
+            layout={{
+              width: 800,
+              height: 600,
+              scene: {
+                xaxis: { title: xAxis },
+                yaxis: { title: yAxis },
+                zaxis: { title: zAxis || 'Z' }
+              },
+              title: '3D Line Chart'
             }}
           />
         );
