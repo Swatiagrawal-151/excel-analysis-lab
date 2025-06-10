@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Header } from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart3, LineChart, PieChart, Zap, Plus, Eye } from 'lucide-react';
+import { BarChart3, LineChart, PieChart, Zap, Plus, Eye, TrendingUp, Target, Activity, Map, Calendar, Users } from 'lucide-react';
 
 const Charts = () => {
   const chartTemplates = [
@@ -33,6 +32,62 @@ const Charts = () => {
       icon: Zap,
       color: "from-orange-500 to-red-500",
       usage: "34 times used"
+    },
+    {
+      name: "Area Chart",
+      description: "Show cumulative values over time",
+      icon: TrendingUp,
+      color: "from-cyan-500 to-blue-500",
+      usage: "42 times used"
+    },
+    {
+      name: "Donut Chart",
+      description: "Enhanced pie chart with center space",
+      icon: Target,
+      color: "from-rose-500 to-pink-500",
+      usage: "28 times used"
+    },
+    {
+      name: "Radar Chart",
+      description: "Multi-dimensional data comparison",
+      icon: Activity,
+      color: "from-violet-500 to-purple-500",
+      usage: "19 times used"
+    },
+    {
+      name: "Heatmap",
+      description: "Visualize data density and patterns",
+      icon: Map,
+      color: "from-amber-500 to-orange-500",
+      usage: "31 times used"
+    },
+    {
+      name: "Gantt Chart",
+      description: "Project timeline visualization",
+      icon: Calendar,
+      color: "from-emerald-500 to-green-500",
+      usage: "15 times used"
+    },
+    {
+      name: "Funnel Chart",
+      description: "Show conversion rates and processes",
+      icon: Users,
+      color: "from-slate-500 to-gray-500",
+      usage: "22 times used"
+    },
+    {
+      name: "Waterfall Chart",
+      description: "Track cumulative changes",
+      icon: BarChart3,
+      color: "from-teal-500 to-cyan-500",
+      usage: "11 times used"
+    },
+    {
+      name: "Treemap",
+      description: "Hierarchical data visualization",
+      icon: Target,
+      color: "from-indigo-500 to-blue-500",
+      usage: "9 times used"
     }
   ];
 
@@ -56,7 +111,7 @@ const Charts = () => {
 
         <div className="mb-8">
           <h2 className="text-2xl font-semibold text-slate-800 mb-4">Chart Templates</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {chartTemplates.map((template, index) => {
               const IconComponent = template.icon;
               return (
