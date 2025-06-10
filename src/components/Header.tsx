@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { BarChart3, Database, TrendingUp, Figma } from 'lucide-react';
+import { Navigation } from './Navigation';
 
 export const Header = () => {
   return (
@@ -18,6 +19,8 @@ export const Header = () => {
               <p className="text-sm text-slate-500 font-medium">Figma-Inspired Analytics Platform</p>
             </div>
           </div>
+          
+          <Navigation />
           
           <div className="flex items-center space-x-8">
             <div className="flex items-center space-x-3 bg-slate-50 px-4 py-2 rounded-xl">
