@@ -8,6 +8,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { BarChart3, TrendingUp, Download } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import Plot from 'react-plotly.js';
+import { ChartRecommendationBot } from './ChartRecommendationBot';
 
 interface ChartGeneratorProps {
   data: ExcelData;
@@ -43,6 +44,15 @@ export const ChartGenerator: React.FC<ChartGeneratorProps> = ({ data }) => {
 
   const selectedChartType = chartTypes.find(type => type.value === chartType);
   const is3DChart = selectedChartType?.is3D || false;
+
+  const handleRecommendationSelect = (recommendedChartType: string, recommendedXAxis: string, recommendedYAxis: string, recommendedZAxis?: string) => {
+    setChartType(recommendedChartType);
+    setXAxis(recommendedXAxis);
+    setYAxis(recommendedYAxis);
+    if (recommendedZAxis) {
+      setZAxis(recommendedZAxis);
+    }
+  };
 
   const prepareChartData = () => {
     if (!xAxis || !yAxis) return [];
@@ -336,6 +346,12 @@ export const ChartGenerator: React.FC<ChartGeneratorProps> = ({ data }) => {
 
   return (
     <div className="space-y-6">
+      {/* AI Recommendations Bot */}
+      <ChartRecommendationBot 
+        data={data} 
+        onRecommendationSelect={handleRecommendationSelect}
+      />
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
@@ -462,3 +478,5 @@ export const ChartGenerator: React.FC<ChartGeneratorProps> = ({ data }) => {
     </div>
   );
 };
+
+export default ChartGenerator;
