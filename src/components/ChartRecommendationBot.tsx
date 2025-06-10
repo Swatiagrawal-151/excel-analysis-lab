@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ExcelData } from '@/pages/Index';
-import { Bot, Lightbulb, TrendingUp, BarChart3, PieChart, Scatter, Activity } from 'lucide-react';
+import { Bot, Lightbulb, TrendingUp, BarChart3, PieChart, Zap, Activity } from 'lucide-react';
 
 interface ChartRecommendationBotProps {
   data: ExcelData;
@@ -111,7 +110,7 @@ export const ChartRecommendationBot: React.FC<ChartRecommendationBotProps> = ({
           yAxis: numericColumns[1],
           confidence: 85,
           reasoning: 'Multiple numeric variables - great for correlation analysis',
-          icon: Scatter
+          icon: Zap
         });
       }
 
