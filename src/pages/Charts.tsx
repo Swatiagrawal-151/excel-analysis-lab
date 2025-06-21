@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Header } from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, LineChart, PieChart, Zap, Plus, Eye, TrendingUp, Target, Activity, Map, Calendar, Users } from 'lucide-react';
+import { ChartCreationDialog } from '@/components/ChartCreationDialog';
 
 const Charts = () => {
+  const [isCreationDialogOpen, setIsCreationDialogOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+
   const chartTemplates = [
     {
       name: "Bar Chart",
@@ -98,6 +102,11 @@ const Charts = () => {
     { name: "Customer Satisfaction", type: "Scatter Plot", created: "1 week ago", views: 89 }
   ];
 
+  const handleCreateChart = (template) => {
+    setSelectedTemplate(template);
+    setIsCreationDialogOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       <Header />
@@ -125,7 +134,10 @@ const Charts = () => {
                   <CardContent className="text-center">
                     <p className="text-sm text-slate-600 mb-3">{template.description}</p>
                     <p className="text-xs text-slate-500">{template.usage}</p>
-                    <button className={`mt-4 w-full py-2 px-4 bg-gradient-to-r ${template.color} text-white rounded-lg hover:shadow-lg transition-all duration-200 text-sm font-medium flex items-center justify-center space-x-2`}>
+                    <button 
+                      onClick={() => handleCreateChart(template)}
+                      className={`mt-4 w-full py-2 px-4 bg-gradient-to-r ${template.color} text-white rounded-lg hover:shadow-lg transition-all duration-200 text-sm font-medium flex items-center justify-center space-x-2`}
+                    >
                       <Plus className="h-4 w-4" />
                       <span>Create</span>
                     </button>
@@ -168,6 +180,12 @@ const Charts = () => {
           </Card>
         </div>
       </div>
+
+      <ChartCreationDialog
+        open={isCreationDialogOpen}
+        onOpenChange={setIsCreationDialogOpen}
+        selectedTemplate={selectedTemplate}
+      />
     </div>
   );
 };
