@@ -1,12 +1,18 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Header } from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, Download, Share2, Calendar, TrendingUp, BarChart3 } from 'lucide-react';
 import html2canvas from 'html2canvas';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
+import { CreateReportDialog } from '@/components/CreateReportDialog';
+import { ScheduleReportDialog } from '@/components/ScheduleReportDialog';
+import { TemplateLibraryDialog } from '@/components/TemplateLibraryDialog';
 
 const Reports = () => {
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+  const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
+
   const reports = [
     {
       id: "monthly-analytics",
@@ -173,15 +179,24 @@ const Reports = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button className="p-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex flex-col items-center space-y-3">
+                <button 
+                  onClick={() => setCreateDialogOpen(true)}
+                  className="p-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex flex-col items-center space-y-3"
+                >
                   <FileText className="h-8 w-8" />
                   <span className="font-medium">Create New Report</span>
                 </button>
-                <button className="p-6 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex flex-col items-center space-y-3">
+                <button 
+                  onClick={() => setScheduleDialogOpen(true)}
+                  className="p-6 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex flex-col items-center space-y-3"
+                >
                   <Calendar className="h-8 w-8" />
                   <span className="font-medium">Schedule Report</span>
                 </button>
-                <button className="p-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex flex-col items-center space-y-3">
+                <button 
+                  onClick={() => setTemplateDialogOpen(true)}
+                  className="p-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex flex-col items-center space-y-3"
+                >
                   <BarChart3 className="h-8 w-8" />
                   <span className="font-medium">Template Library</span>
                 </button>
@@ -245,6 +260,11 @@ const Reports = () => {
           </div>
         </div>
       </div>
+
+      {/* Dialogs */}
+      <CreateReportDialog open={createDialogOpen} onOpenChange={setCreateDialogOpen} />
+      <ScheduleReportDialog open={scheduleDialogOpen} onOpenChange={setScheduleDialogOpen} />
+      <TemplateLibraryDialog open={templateDialogOpen} onOpenChange={setTemplateDialogOpen} />
     </div>
   );
 };
