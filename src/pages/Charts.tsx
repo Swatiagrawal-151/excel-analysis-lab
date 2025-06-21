@@ -3,10 +3,13 @@ import { Header } from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, LineChart, PieChart, Zap, Plus, Eye, TrendingUp, Target, Activity, Map, Calendar, Users } from 'lucide-react';
 import { ChartCreationDialog } from '@/components/ChartCreationDialog';
+import { ChartViewDialog } from '@/components/ChartViewDialog';
 
 const Charts = () => {
   const [isCreationDialogOpen, setIsCreationDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [selectedChart, setSelectedChart] = useState(null);
 
   const chartTemplates = [
     {
@@ -107,6 +110,11 @@ const Charts = () => {
     setIsCreationDialogOpen(true);
   };
 
+  const handleViewChart = (chart) => {
+    setSelectedChart(chart);
+    setIsViewDialogOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       <Header />
@@ -169,7 +177,10 @@ const Charts = () => {
                         <Eye className="h-4 w-4" />
                         <span className="text-sm">{chart.views}</span>
                       </div>
-                      <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:shadow-lg transition-all duration-200 text-sm font-medium">
+                      <button 
+                        onClick={() => handleViewChart(chart)}
+                        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:shadow-lg transition-all duration-200 text-sm font-medium"
+                      >
                         View
                       </button>
                     </div>
@@ -185,6 +196,12 @@ const Charts = () => {
         open={isCreationDialogOpen}
         onOpenChange={setIsCreationDialogOpen}
         selectedTemplate={selectedTemplate}
+      />
+
+      <ChartViewDialog
+        open={isViewDialogOpen}
+        onOpenChange={setIsViewDialogOpen}
+        chart={selectedChart}
       />
     </div>
   );
