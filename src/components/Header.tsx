@@ -2,6 +2,7 @@
 import React from 'react';
 import { BarChart3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Navigation } from './Navigation';
 import UserProfile from './UserProfile';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -20,8 +21,11 @@ const Header = () => {
           </span>
         </Link>
         
-        <div className="flex items-center space-x-4">
-          {user && <UserProfile />}
+        <div className="flex items-center space-x-8">
+          {user && <Navigation />}
+          <div className="flex items-center space-x-4">
+            {user && <UserProfile />}
+          </div>
         </div>
       </div>
     </header>
