@@ -12,27 +12,87 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
+          company: string | null
           created_at: string
           full_name: string | null
+          github_url: string | null
           id: string
+          job_title: string | null
+          linkedin_url: string | null
+          location: string | null
+          phone: string | null
+          preferences: Json | null
           updated_at: string
           username: string | null
+          website: string | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
+          company?: string | null
           created_at?: string
           full_name?: string | null
+          github_url?: string | null
           id: string
+          job_title?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          phone?: string | null
+          preferences?: Json | null
           updated_at?: string
           username?: string | null
+          website?: string | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
+          company?: string | null
           created_at?: string
           full_name?: string | null
+          github_url?: string | null
           id?: string
+          job_title?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          phone?: string | null
+          preferences?: Json | null
           updated_at?: string
           username?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          chart_config: Json | null
+          created_at: string
+          data: Json | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chart_config?: Json | null
+          created_at?: string
+          data?: Json | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chart_config?: Json | null
+          created_at?: string
+          data?: Json | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

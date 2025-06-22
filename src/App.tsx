@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import Charts from "./pages/Charts";
 import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -54,6 +55,11 @@ const App = () => {
               <Route path="/reports" element={
                 <AuthGuard>
                   <Reports />
+                </AuthGuard>
+              } />
+              <Route path="/settings" element={
+                <AuthGuard>
+                  <Settings />
                 </AuthGuard>
               } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

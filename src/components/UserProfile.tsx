@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { LogOut, User, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
 
 const UserProfile = () => {
   const { user, signOut } = useAuth();
@@ -19,7 +20,7 @@ const UserProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSignOut = async () => {
-    const { error } = await signOut();
+    const { error } = await signOut();  
     if (error) {
       toast({
         title: "Error",
@@ -68,14 +69,18 @@ const UserProfile = () => {
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3 mt-4">
-          <Button variant="outline" className="w-full justify-start" disabled>
-            <User className="h-4 w-4 mr-2" />
-            Profile Settings (Coming Soon)
-          </Button>
-          <Button variant="outline" className="w-full justify-start" disabled>
-            <Settings className="h-4 w-4 mr-2" />
-            Account Settings (Coming Soon)
-          </Button>
+          <Link to="/settings">
+            <Button variant="outline" className="w-full justify-start" onClick={() => setIsOpen(false)}>
+              <User className="h-4 w-4 mr-2" />
+              Profile Settings
+            </Button>
+          </Link>
+          <Link to="/settings">
+            <Button variant="outline" className="w-full justify-start" onClick={() => setIsOpen(false)}>
+              <Settings className="h-4 w-4 mr-2" />
+              Account Settings
+            </Button>
+          </Link>
           <Button 
             variant="destructive" 
             className="w-full justify-start"
