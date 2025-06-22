@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Header } from '@/components/Header';
+import Header from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, TrendingUp, Users, Database } from 'lucide-react';
 

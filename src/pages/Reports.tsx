@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Header } from '@/components/Header';
+import Header from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, Download, Share2, Calendar, TrendingUp, BarChart3 } from 'lucide-react';
 import html2canvas from 'html2canvas';

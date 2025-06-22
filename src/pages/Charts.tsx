@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Header } from '@/components/Header';
+import Header from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, LineChart, PieChart, Zap, Plus, Eye, TrendingUp, Target, Activity, Map, Calendar, Users } from 'lucide-react';
 import { ChartCreationDialog } from '@/components/ChartCreationDialog';

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Header } from '@/components/Header';
+import Header from '@/components/Header';
 import Index from './Index';
 
 const Analytics = () => {

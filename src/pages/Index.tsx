@@ -4,7 +4,7 @@ import { FileUpload } from '@/components/FileUpload';
 import { DataPreview } from '@/components/DataPreview';
 import { ChartGenerator } from '@/components/ChartGenerator';
 import { UploadHistory } from '@/components/UploadHistory';
-import { Header } from '@/components/Header';
+import Header from '@/components/Header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Figma, BarChart3, Upload, History } from 'lucide-react';
