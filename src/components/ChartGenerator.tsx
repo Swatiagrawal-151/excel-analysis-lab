@@ -5,10 +5,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { ExcelData } from '@/pages/Index';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, ScatterChart, Scatter as ScatterPlot, AreaChart, Area } from 'recharts';
-import { BarChart3, TrendingUp, Download } from 'lucide-react';
+import { BarChart3, TrendingUp, Download, FileImage, FilePdf } from 'lucide-react';
 import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import Plot from 'react-plotly.js';
 import { ChartRecommendationBot } from './ChartRecommendationBot';
+import { toast } from '@/hooks/use-toast';
 
 interface ChartGeneratorProps {
   data: ExcelData;
@@ -68,19 +70,80 @@ export const ChartGenerator: React.FC<ChartGeneratorProps> = ({ data }) => {
 
   const chartData = prepareChartData();
 
-  const downloadChart = async () => {
+  const downloadAsPNG = async () => {
     setIsDownloading(true);
     try {
       const chartElement = document.getElementById('chart-container');
       if (chartElement) {
-        const canvas = await html2canvas(chartElement);
+        const canvas = await html2canvas(chartElement, {
+          backgroundColor: '#ffffff',
+          scale: 2,
+          logging: false,
+        });
         const link = document.createElement('a');
         link.download = `${data.fileName}_${chartType}_chart.png`;
-        link.href = canvas.toDataURL();
+        link.href = canvas.toDataURL('image/png');
         link.click();
+        
+        toast({
+          title: "Chart Downloaded",
+          description: "Your chart has been downloaded as PNG successfully.",
+        });
       }
     } catch (error) {
-      console.error('Error downloading chart:', error);
+      console.error('Error downloading PNG:', error);
+      toast({
+        title: "Download Failed",
+        description: "Failed to download chart as PNG. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const downloadAsPDF = async () => {
+    setIsDownloading(true);
+    try {
+      const chartElement = document.getElementById('chart-container');
+      if (chartElement) {
+        const canvas = await html2canvas(chartElement, {
+          backgroundColor: '#ffffff',
+          scale: 2,
+          logging: false,
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
+          unit: 'mm',
+        });
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+        const width = imgWidth * ratio;
+        const height = imgHeight * ratio;
+        const x = (pdfWidth - width) / 2;
+        const y = (pdfHeight - height) / 2;
+        
+        pdf.addImage(imgData, 'PNG', x, y, width, height);
+        pdf.save(`${data.fileName}_${chartType}_chart.pdf`);
+        
+        toast({
+          title: "Chart Downloaded",
+          description: "Your chart has been downloaded as PDF successfully.",
+        });
+      }
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      toast({
+        title: "Download Failed",
+        description: "Failed to download chart as PDF. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsDownloading(false);
     }
@@ -459,10 +522,16 @@ export const ChartGenerator: React.FC<ChartGeneratorProps> = ({ data }) => {
             </div>
             
             {chartData.length > 0 && (
-              <Button onClick={downloadChart} disabled={isDownloading}>
-                <Download className="h-4 w-4 mr-2" />
-                {isDownloading ? 'Downloading...' : 'Download Chart'}
-              </Button>
+              <div className="flex space-x-2">
+                <Button onClick={downloadAsPNG} disabled={isDownloading} variant="outline">
+                  <FileImage className="h-4 w-4 mr-2" />
+                  {isDownloading ? 'Downloading...' : 'Download PNG'}
+                </Button>
+                <Button onClick={downloadAsPDF} disabled={isDownloading} variant="outline">
+                  <FilePdf className="h-4 w-4 mr-2" />
+                  {isDownloading ? 'Downloading...' : 'Download PDF'}
+                </Button>
+              </div>
             )}
           </div>
         </CardContent>
