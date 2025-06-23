@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { ExcelData } from '@/pages/Index';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, ScatterChart, Scatter as ScatterPlot, AreaChart, Area } from 'recharts';
-import { BarChart3, TrendingUp, Download, FileImage, FilePdf } from 'lucide-react';
+import { BarChart3, TrendingUp, Download, FileImage, File } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import Plot from 'react-plotly.js';
@@ -528,7 +528,7 @@ export const ChartGenerator: React.FC<ChartGeneratorProps> = ({ data }) => {
                   {isDownloading ? 'Downloading...' : 'Download PNG'}
                 </Button>
                 <Button onClick={downloadAsPDF} disabled={isDownloading} variant="outline">
-                  <FilePdf className="h-4 w-4 mr-2" />
+                  <File className="h-4 w-4 mr-2" />
                   {isDownloading ? 'Downloading...' : 'Download PDF'}
                 </Button>
               </div>
