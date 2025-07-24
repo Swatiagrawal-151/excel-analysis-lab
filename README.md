@@ -1,5 +1,5 @@
 
-ExcelToDataBase
+ExcelToDataBase-
 React Page with a form to upload the excel sheet and that data will be imported to the Database
 
 There is an excel sheet with 3 sheets-> User, Admin, Products.
